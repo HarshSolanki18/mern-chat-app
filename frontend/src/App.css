@@ -1,9 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300&display=swap");
 
-.App {
+
+
+.App-light {
   min-height: 100vh;
   display: flex;
   background-color: rgb(240, 238, 235);
+  
+}
+.App-dark{
+  min-height: 100vh;
+  display: flex;
+  background-color: black;
+  color:white
 }
 
 ::-webkit-scrollbar {

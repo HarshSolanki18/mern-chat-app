@@ -16,12 +16,14 @@ import {
   DrawerHeader,
   DrawerOverlay,
 } from "@chakra-ui/modal";
+
 import { Tooltip } from "@chakra-ui/tooltip";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Avatar } from "@chakra-ui/avatar";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+
 import { useToast } from "@chakra-ui/toast";
 import ChatLoading from "../ChatLoading";
 import { Spinner } from "@chakra-ui/spinner";
@@ -31,13 +33,15 @@ import { Effect } from "react-notification-badge";
 import { getSender } from "../../config/ChatLogics";
 import UserListItem from "../userAvatar/UserListItem";
 import { ChatState } from "../../Context/ChatProvider";
+import { ThemeState } from "../../Context/ThemeProvider";
+
 
 function SideDrawer() {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
-
+  const { theme, setTheme } = ThemeState();
   const {
     setSelectedChat,
     user,
@@ -50,7 +54,7 @@ function SideDrawer() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
-
+  const [toggle,setToggle]=useState(false);
   const logoutHandler = () => {
     localStorage.removeItem("userInfo");
     history.push("/");
@@ -128,10 +132,11 @@ function SideDrawer() {
         d="flex"
         justifyContent="space-between"
         alignItems="center"
-        bg="white"
+        bg={theme==='light'?"white":"#21211f"}
         w="100%"
         p="5px 10px 5px 10px"
         borderWidth="5px"
+        borderColor={theme==='dark' && "#21211f"}
       >
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
           <Button variant="ghost" onClick={onOpen}>
@@ -171,7 +176,22 @@ function SideDrawer() {
             </MenuList>
           </Menu>
           <Menu>
-            <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
+            
+              <Button
+                onClick={() => {
+                  setToggle(!toggle);
+                  setTheme(toggle?'dark':'light');
+                }}
+                marginRight="2px"
+                size="xs"
+                textColor={theme==='dark'&&"black"}
+              >
+               {theme==='light'?'dark':'light'}
+              </Button>
+             
+            
+
+            <MenuButton as={Button} bg={theme==='dark' ?"#21211f":"white"} rightIcon={<ChevronDownIcon />}>
               <Avatar
                 size="sm"
                 cursor="pointer"
@@ -179,8 +199,8 @@ function SideDrawer() {
                 src={user.pic}
               />
             </MenuButton>
-            <MenuList>
-              <ProfileModal user={user}>
+            <MenuList  color={theme==='dark' && "#21211f"}>
+              <ProfileModal  user={user}>
                 <MenuItem>My Profile</MenuItem>{" "}
               </ProfileModal>
               <MenuDivider />
