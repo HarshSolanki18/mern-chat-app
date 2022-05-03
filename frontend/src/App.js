@@ -2,10 +2,10 @@ import "./App.css";
 import Homepage from "./Pages/Homepage";
 import { Route } from "react-router-dom";
 import Chatpage from "./Pages/Chatpage";
-import { ThemeProvider,ThemeState } from "./Context/ThemeProvider";
+import { ThemeState } from "./Context/ThemeProvider";
 
 function App() {
-  const {theme,setTheme}=ThemeState();
+  const {theme}=ThemeState();
   return (
     
       

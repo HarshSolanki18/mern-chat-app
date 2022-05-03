@@ -34,6 +34,7 @@ import { getSender } from "../../config/ChatLogics";
 import UserListItem from "../userAvatar/UserListItem";
 import { ChatState } from "../../Context/ChatProvider";
 import { ThemeState } from "../../Context/ThemeProvider";
+import ToggleTheme from "../Header/ToggleTheme";
 
 
 function SideDrawer() {
@@ -41,7 +42,7 @@ function SideDrawer() {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
-  const { theme, setTheme } = ThemeState();
+  const { theme} = ThemeState();
   const {
     setSelectedChat,
     user,
@@ -54,7 +55,7 @@ function SideDrawer() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
-  const [toggle,setToggle]=useState(false);
+  
   const logoutHandler = () => {
     localStorage.removeItem("userInfo");
     history.push("/");
@@ -82,7 +83,7 @@ function SideDrawer() {
       };
 
       const { data } = await axios.get(`/api/user?search=${search}`, config);
-
+      console.log(data)
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
@@ -177,17 +178,7 @@ function SideDrawer() {
           </Menu>
           <Menu>
             
-              <Button
-                onClick={() => {
-                  setToggle(!toggle);
-                  setTheme(toggle?'dark':'light');
-                }}
-                marginRight="2px"
-                size="xs"
-                textColor={theme==='dark'&&"black"}
-              >
-               {theme==='light'?'dark':'light'}
-              </Button>
+              <ToggleTheme/>
              
             
 
@@ -227,7 +218,7 @@ function SideDrawer() {
             {loading ? (
               <ChatLoading />
             ) : (
-              searchResult?.map((user) => (
+              searchResult.map((user) => (
                 <UserListItem
                   key={user._id}
                   user={user}

@@ -8,10 +8,12 @@ import ChatLoading from "./ChatLoading";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 import { Button } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
+import { ThemeState } from "../Context/ThemeProvider";
+import  {grey, lightGrey} from '../Constants/theme';
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
-
+  const {theme}=ThemeState();
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
 
   const toast = useToast();
@@ -51,10 +53,11 @@ const MyChats = ({ fetchAgain }) => {
       flexDir="column"
       alignItems="center"
       p={3}
-      bg="white"
+      bg={theme==='light'?"white":grey}
       w={{ base: "100%", md: "31%" }}
       borderRadius="lg"
       borderWidth="1px"
+      borderColor={theme==='light'?"white":grey}
     >
       <Box
         pb={3}
@@ -72,6 +75,8 @@ const MyChats = ({ fetchAgain }) => {
             d="flex"
             fontSize={{ base: "17px", md: "10px", lg: "17px" }}
             rightIcon={<AddIcon />}
+            color={theme==='dark'&&lightGrey}
+            /*backgroundColor={theme==='dark'&&grey}*/
           >
             New Group Chat
           </Button>
@@ -81,27 +86,27 @@ const MyChats = ({ fetchAgain }) => {
         d="flex"
         flexDir="column"
         p={3}
-        bg="#F8F8F8"
+        bg={theme==='light'?"#F8F8F8":lightGrey}
         w="100%"
         h="100%"
         borderRadius="lg"
         overflowY="hidden"
       >
-        {chats ? (
+        {chats && loggedUser ? (
           <Stack overflowY="scroll">
             {chats.map((chat) => (
               <Box
                 onClick={() => setSelectedChat(chat)}
                 cursor="pointer"
-                bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
-                color={selectedChat === chat ? "white" : "black"}
+                bg={selectedChat === chat ? theme==='light'?"#38B2AC" : grey:""}
+                color={selectedChat === chat ? theme==='light'? "black" : "white":""}
                 px={3}
                 py={2}
                 borderRadius="lg"
                 key={chat._id}
               >
-                <Text>
-                  {!chat.isGroupChat
+                <Text >
+                  {!chat.isGroupChat && chat.users.length===2
                     ? getSender(loggedUser, chat.users)
                     : chat.chatName}
                 </Text>
