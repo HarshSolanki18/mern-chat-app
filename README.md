@@ -10,6 +10,11 @@ Uses Socket.io for real time communication and uses Mongo DB as Database.
 - group-chat
 - stateless jwt authentication
 - dark mode
+- online status
 
+# Screenshots
+
+## dark mode
+   ![dark mode](/screenshots/dark_mode.png)
 
   
