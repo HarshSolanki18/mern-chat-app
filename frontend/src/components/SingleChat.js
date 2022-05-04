@@ -37,6 +37,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+  const [lastSeen,setLastSeen]=useState(null);
+  const [lastSeenLoading,setLastSeenLoading]=useState(true);
   const { selectedChat, setSelectedChat, user, notification, setNotification } =
     ChatState();
   const {theme}=ThemeState();
@@ -93,6 +95,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         );
         socket.emit("new message", data);
         setMessages([...messages, data]);
+        console.log(config)
+         const newData=await axios.post(
+          `/api/lastseen/${user._id}`,
+          config
+        );
+          console.log(newData);
       } catch (error) {
         toast({
           title: "Error Occured!",
@@ -138,7 +146,41 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     });
   });
-
+  useEffect(()=>{
+    const getLastSeen=async function(){
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          }
+        };
+  
+        setLastSeenLoading(true);
+        const sender=getSenderFull(user,selectedChat.users)
+        console.log(sender)
+        const { data } = await axios.get(
+          `/api/lastseen/${sender._id}`,
+          config
+        );
+        
+        setLastSeen(data);
+        console.log(data)
+        setLastSeenLoading(false);
+  
+        
+      
+    }catch(err){
+      console.log(err);
+      setLastSeen("change");
+      setLastSeenLoading(false)
+    }
+    
+  }
+  const time=setTimeout(getLastSeen,20000);
+ return()=>{
+    clearTimeout(time)
+  }
+  },[lastSeen])
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
 
@@ -182,10 +224,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             {messages &&
               (!selectedChat.isGroupChat ? (
                 <>
-                  {getSender(user, selectedChat.users)}
+                  {`${getSender(user, selectedChat.users)} ${"(online)" }`  } 
+                  
                   <ProfileModal
                     user={getSenderFull(user, selectedChat.users)}
+                    lastSeenLoading={lastSeenLoading}
+                    lastSeen={lastSeen}
                   />
+                  
                 </>
               ) : (
                 <>
