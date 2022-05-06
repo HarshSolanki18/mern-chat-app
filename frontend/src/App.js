@@ -11,7 +11,7 @@ function App() {
       
     <div className={theme==='light' ?"App-light":"App-dark"}>
       <Route path="/" component={Homepage} exact />
-      <Route path="/chats" component={Chatpage} />
+      <Route exact path="/chats" component={Chatpage} />
     </div>
     
   );

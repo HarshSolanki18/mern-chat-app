@@ -19,7 +19,7 @@ const getLastSeen=asyncHandler(async(req,res)=>{
     }
 })
 const addLastSeen=asyncHandler(async(req,res)=>{
-    const data=await LastActivity.find({user:req.params.id})
+    const data=await LastActivity.findOne({user:req.params.id})
     if(data && data.length>0){
         await data.save();
         res.json("success activity logged")

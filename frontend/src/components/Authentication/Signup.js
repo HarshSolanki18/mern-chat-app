@@ -179,6 +179,7 @@ const Signup = () => {
       <FormControl id="pic">
         <FormLabel>Upload your Picture</FormLabel>
         <Input
+          isDisabled={true}
           type="file"
           p={1.5}
           accept="image/*"
